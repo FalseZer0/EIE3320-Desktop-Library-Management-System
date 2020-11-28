@@ -1,18 +1,22 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class Dialog extends JDialog {
-    JTextArea text = new JTextArea(3,100);
-    JTextArea systemM = new JTextArea(2,100);
-    Book book;
-    JPanel middleOut = new JPanel(new BorderLayout());
-    JPanel buttons = new JPanel(new FlowLayout());
-    JButton borrow = new JButton("Borrow");
-    JButton returnB = new JButton("Return");
-    JButton reserve = new JButton("Reserve");
-    JButton waitQ = new JButton("Waiting Queue");
+    private JTextArea text = new JTextArea(3,100);
+    private JTextArea systemM = new JTextArea(2,100);
+    private Book book;
+    private JPanel middleOut = new JPanel(new BorderLayout());
+    private JPanel buttons = new JPanel(new FlowLayout());
+    private JButton borrow = new JButton("Borrow");
+    private JButton returnB = new JButton("Return");
+    private JButton reserve = new JButton("Reserve");
+    private JButton waitQ = new JButton("Waiting Queue");
+    private JButton addImage = new JButton("Add Image");
+    private JButton seeImage = new JButton("Image Preview");
 
     public Dialog(Frame frame,Book book) {
         super(frame,book.getTitle(),true);
@@ -27,6 +31,39 @@ public class Dialog extends JDialog {
         this.add(text,BorderLayout.NORTH);
         this.add(middleOut,BorderLayout.CENTER);
         this.add(systemM,BorderLayout.SOUTH);
+        seeImage.addActionListener(
+            new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JDialog dialog = new JDialog();
+                    dialog.setTitle(book.getTitle());
+                    JLabel label = new JLabel( new ImageIcon(book.getImagePath()) );
+                    dialog.add(label);
+                    dialog.setModal(true);
+                    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                    dialog.setLocationRelativeTo(null);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+            }
+        );
+        addImage.addActionListener(
+            new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser file = new JFileChooser();
+                    File workingDirectory = new File(".");
+                    file.setCurrentDirectory(workingDirectory);
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+                    file.addChoosableFileFilter(filter);
+                    int result = file.showSaveDialog(null);
+                    if(result == JFileChooser.APPROVE_OPTION){
+                        File selectedFile = file.getSelectedFile();
+                        book.setImagePath(selectedFile.getAbsolutePath());
+                    }
+                }
+            }
+        );
         returnB.addActionListener(
             new ActionListener() {
                 @Override
@@ -107,6 +144,8 @@ public class Dialog extends JDialog {
     }
     private void initButtonPanel(){
         buttons.add(borrow);
+        buttons.add(addImage);
+        buttons.add(seeImage);
         buttons.add(returnB);
         buttons.add(reserve);
         buttons.add(waitQ);

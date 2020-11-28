@@ -3,11 +3,35 @@
 public class Book {
     private String title;
     private String ISBN;
-    private boolean available;
+    private boolean available=true;
+    private String imagePath;
     public Book(){
         title="";
         ISBN = "";
-        available = true;
+        imagePath="";
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public Book(String ISBN) throws Exception {
+        this.ISBN = ISBN.trim();
+        if(ISBN.length()==0)
+            throw new Exception("Error: ISBN cannot be blank.");
+    }
+    public Book(String ISBN, String title) throws Exception {
+        this.ISBN = ISBN.trim();
+        this.title = title.trim();
+        if(ISBN.length()==0)
+            throw new Exception("Error: ISBN cannot be blank.");
+        else if(title.length()==0)
+            throw new Exception("Error: title cannot be blank.");
+
     }
     private MyQueue<String> reservedQueue = new MyQueue<>();
 

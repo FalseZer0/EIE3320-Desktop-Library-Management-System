@@ -101,8 +101,8 @@ public class Frame extends JFrame {
     class MyEventListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             if (e.getSource() == add) {
+
                 if (getISBN().isEmpty()) {
                     JOptionPane.showMessageDialog(Frame.this, "java.lang.Exception: Error: ISBN cannot be blank");
                     resetTextFields();
@@ -155,6 +155,10 @@ public class Frame extends JFrame {
                 showAllRecords(bookList);
                 resetTextFields();
             } else if (e.getSource() == delete) {
+                if (bookList.isEmpty()) {
+                    JOptionPane.showMessageDialog(Frame.this, "Error: Database is empty");
+                    return;
+                }
                 if (getISBN().isEmpty()) {
                     JOptionPane.showMessageDialog(Frame.this, "java.lang.Exception: Error: ISBN cannot be blank");
                     resetTextFields();
@@ -167,15 +171,17 @@ public class Frame extends JFrame {
                     bookList.remove(tempIndex);
                     ((DefaultTableModel) table.getModel()).removeRow(tempIndex);
                     resetTextFields();
-                } else if (bookList.isEmpty()) {
-                    JOptionPane.showMessageDialog(Frame.this, "Error: Database is empty");
-                } else {
+                }else {
                     JOptionPane.showMessageDialog(Frame.this, "Error: book ISBN is not in the database");
                 }
                 resetTextFields();
 
             } else if (e.getSource() == edit)
             {
+                if (bookList.isEmpty()) {
+                    JOptionPane.showMessageDialog(Frame.this, "Error: Database is empty");
+                    return;
+                }
                 if (getISBN().isEmpty()) {
                     JOptionPane.showMessageDialog(Frame.this, "java.lang.Exception: Error: ISBN cannot be blank");
                     resetTextFields();
@@ -199,9 +205,6 @@ public class Frame extends JFrame {
                     displayTitle.setEnabled(false);
                     exit.setEnabled(false);
                     tempISBN = temp.getISBN();
-                } else if (bookList.isEmpty()) {
-                    JOptionPane.showMessageDialog(Frame.this, "Error: Database is empty");
-
                 } else {
                     JOptionPane.showMessageDialog(Frame.this, "Error: book ISBN is not in the database");
                 }
