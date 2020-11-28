@@ -1,0 +1,25 @@
+0131450913
+HTML How to Program
+false
+C:\Users\Кайрат\Desktop\2a4f156f-8076-496a-8cc5-e9f34228a882.jpg
+zuka;java;
+0131857576
+C++ How to Program
+true
+
+
+0132222205
+Java How to Program
+true
+
+
+12356
+stas
+false
+D:\AKairat\AHWJAVA\Lab2\Images\3d-5KGTL4j4.jpg
+a;b;tvoya mama;suka ;
+1488
+nikita
+false
+D:\AKairat\AHWJAVA\Lab2\Images\r_2320300_8CgA3.jpg
+1;2;3;

@@ -1,10 +1,13 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,8 +38,11 @@ public class Frame extends JFrame {
     private JButton displayISBN = new JButton("Display All by ISBN");
     private JButton displayTitle = new JButton("Display All by Title");
     private JButton exit = new JButton("Exit");
+    private JButton savesData = new JButton("Save Data");
+    private JButton retrieveData = new JButton("Load Data");
     private JTable table;
     private String tempISBN;
+    private String dataPath = "src\\data.txt";
     private Dialog dialog;
 
     public Frame() {
@@ -73,6 +79,8 @@ public class Frame extends JFrame {
         displayISBN.addActionListener(new MyEventListener());
         displayTitle.addActionListener(new MyEventListener());
         more.addActionListener(new MyEventListener());
+        savesData.addActionListener(new MyEventListener());
+        retrieveData.addActionListener(new MyEventListener());
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -366,8 +374,141 @@ public class Frame extends JFrame {
                 resetTextFields();
                 showAllRecords(bookList);
             }
+            else if(e.getSource() == savesData){
+                if (bookList.isEmpty()) {
+                    JOptionPane.showMessageDialog(Frame.this, "Error: Database is empty");
+                    return;
+                }
+
+                BufferedWriter writer = null;
+                try{
+                    writer= new BufferedWriter(new FileWriter(dataPath));
+                    for(Book entry: bookList){
+                        writer.write(entry.getISBN()+"\n");
+                        writer.write(entry.getTitle()+"\n");
+                        writer.write(entry.isAvailable()+"\n");
+                        writer.write(entry.getImagePath()+"\n");
+                        if(entry.getReservedQueue().getList().isEmpty())
+                        {
+                            writer.write("\n");
+                        }
+                        else{
+                            for(String name:entry.getReservedQueue().getList())
+                            {
+                                writer.write(name+";");
+                            }
+                            writer.write("\n");//extra
+                        }
+
+                    }
+                }catch (IOException ex){
+                    ex.printStackTrace();
+                }
+                finally {
+                    if(writer!=null)
+                    {
+                        try {
+                            writer.close();
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+                    }
+                }
+            }
+            else if(e.getSource()==retrieveData)
+            {
+                if(!isFileEmpty())
+                {
+                    BufferedReader reader = null;
+                    try{
+                        reader = new BufferedReader(new FileReader(dataPath));
+                        String line;
+                        String tempisbn ="";
+                        String temptitle="";
+                        String tempavailable="";
+                        String tempimagepath="";
+                        String tempWaitQ = "";
+                        int count = 0;
+
+                        while(true){
+                            if(count>4)
+                            {
+                                count=0;
+                                Book temp = new Book();
+                                temp.setISBN(tempisbn);
+                                temp.setTitle(temptitle);
+                                temp.setAvailable(Boolean.parseBoolean(tempavailable));
+                                temp.setImagePath(tempimagepath);
+                                if(tempWaitQ.length()!=0)
+                                {
+                                    String[] arr = tempWaitQ.split(";");
+                                    MyQueue<String> q = new MyQueue<>();
+                                    for(String str:arr)
+                                    {
+                                        q.enqueue(str);
+                                    }
+                                    temp.setReservedQueue(q);
+                                }
+                                bookList.add(temp);
+                            }
+                            if((line=reader.readLine())==null)
+                                break;
+
+                            switch (count){
+                                case 0:
+                                    tempisbn = line.trim();
+                                    break;
+                                case 1:
+                                    temptitle = line.trim();
+                                    break;
+                                case 2:
+                                    tempavailable = line.trim();
+                                    break;
+                                case 3:
+                                    tempimagepath = line.trim();
+                                    break;
+                                case 4:
+                                    tempWaitQ = line.trim();
+                                    break;
+                            }
+
+                            count++;
+                        }
+                        System.out.println(bookList);
+                        showAllRecords(bookList);
+                    }
+                    catch (IOException exception)
+                    {
+                        exception.printStackTrace();
+                    }
+                    finally {
+                        if(reader!=null)
+                        {
+                            try {
+                                reader.close();
+                            } catch (IOException exception) {
+                                exception.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
 
         }
+    }
+    private boolean isFileEmpty(){
+        File file = new File(dataPath);
+        if(file.length()==0)
+            return true;
+        else
+            return false;
+    }
+    private void clearData() throws IOException{
+        FileWriter fwOb = new FileWriter(dataPath, false);
+        PrintWriter pwOb = new PrintWriter(fwOb, false);
+        pwOb.flush();
+        pwOb.close();
+        fwOb.close();
     }
     private String getISBN(){
         return isbn.getText().trim();
@@ -413,6 +554,8 @@ public class Frame extends JFrame {
         userR3.add(display);
         userR3.add(displayISBN);
         userR3.add(displayTitle);
+        userR3.add(savesData);
+        userR3.add(retrieveData);
         userR3.add(exit);
         userPanel.add(userR1);
         userPanel.add(userR2);
