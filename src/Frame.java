@@ -212,6 +212,8 @@ public class Frame extends JFrame {
                     displayISBN.setEnabled(false);
                     displayTitle.setEnabled(false);
                     exit.setEnabled(false);
+                    savesData.setEnabled(false);
+                    retrieveData.setEnabled(false);
                     tempISBN = temp.getISBN();
                 } else {
                     JOptionPane.showMessageDialog(Frame.this, "Error: book ISBN is not in the database");
@@ -251,6 +253,8 @@ public class Frame extends JFrame {
                     displayISBN.setEnabled(true);
                     displayTitle.setEnabled(true);
                     exit.setEnabled(true);
+                    savesData.setEnabled(true);
+                    retrieveData.setEnabled(true);
                     resetTextFields();
                 }
             } else if (e.getSource() == search) {
@@ -474,7 +478,7 @@ public class Frame extends JFrame {
 
                             count++;
                         }
-                        System.out.println(bookList);
+                        //System.out.println(bookList);
                         showAllRecords(bookList);
                     }
                     catch (IOException exception)
@@ -503,13 +507,13 @@ public class Frame extends JFrame {
         else
             return false;
     }
-    private void clearData() throws IOException{
-        FileWriter fwOb = new FileWriter(dataPath, false);
-        PrintWriter pwOb = new PrintWriter(fwOb, false);
-        pwOb.flush();
-        pwOb.close();
-        fwOb.close();
-    }
+//    private void clearData() throws IOException{
+//        FileWriter fwOb = new FileWriter(dataPath, false);
+//        PrintWriter pwOb = new PrintWriter(fwOb, false);
+//        pwOb.flush();
+//        pwOb.close();
+//        fwOb.close();
+//    }
     private String getISBN(){
         return isbn.getText().trim();
     }
@@ -566,4 +570,5 @@ public class Frame extends JFrame {
         text.setEditable(false);
         text.append("Student Name and ID: Seksembayev Kairat (18078689d)\n" + dateFormat.format(new Date()));
     }
+
 }

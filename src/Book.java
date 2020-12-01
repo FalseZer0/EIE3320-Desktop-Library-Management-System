@@ -1,5 +1,3 @@
-
-
 public class Book {
     private String title;
     private String ISBN;
@@ -19,20 +17,15 @@ public class Book {
         this.imagePath = imagePath;
     }
 
-    public Book(String ISBN) throws Exception {
-        this.ISBN = ISBN.trim();
-        if(ISBN.length()==0)
-            throw new Exception("Error: ISBN cannot be blank.");
+    public Book(String ISBN){
+        this.ISBN = ISBN;
     }
-    public Book(String ISBN, String title) throws Exception {
-        this.ISBN = ISBN.trim();
-        this.title = title.trim();
-        if(ISBN.length()==0)
-            throw new Exception("Error: ISBN cannot be blank.");
-        else if(title.length()==0)
-            throw new Exception("Error: title cannot be blank.");
+    public Book(String ISBN, String title){
+        this.ISBN = ISBN;
+        this.title = title;
 
     }
+
     private MyQueue<String> reservedQueue = new MyQueue<>();
 
     public String getTitle() {

@@ -85,8 +85,6 @@ public class MyLinkedList<E> implements MyList<E> {
             size++;
         }
         //done
-
-
     }
 
     /**
@@ -224,7 +222,6 @@ public class MyLinkedList<E> implements MyList<E> {
             index++;
         }
         return -1;
-        //??
     }
 
     @Override
@@ -257,7 +254,7 @@ public class MyLinkedList<E> implements MyList<E> {
         }
         current.element = e;
         return null;
-        //??
+        //set method should not return any value
     }
 
     @Override
